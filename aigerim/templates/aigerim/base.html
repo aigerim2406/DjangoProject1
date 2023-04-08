@@ -12,12 +12,12 @@
 		{% block mainmenu %}
 			<div class="header">
 					<ul id="mainmenu" class="mainmenu">
-						<li class="logo"><a href="#"><div class="logo"></div></a></li>
+						<li class="logo"><a href="{% url 'home' %}"><div class="logo"></div></a></li>
 						{% for a in menu %}
 						{% if not forloop.last %}
-							<li><a href="#">{{a.title}}</a></li>
+							<li><a href="{% url a.url_name %}">{{a.title}}</a></li>
 						{% else %}
-							<li class="last"><a href="#">{{a.title}}</a></li>
+							<li class="last"><a href="{% url a.url_name %}">{{a.title}}</a></li>
 						{% endif %}
 						{% endfor %}
 					</ul>
@@ -29,10 +29,20 @@
 				<tr>
 					<td valign="top" class="left-chapters">
 					<ul id="leftchapters">
-						<li class="selected">Все категории</li>
-						<li><a href="#">Актрисы</a></li>
-						<li><a href="#">Певицы</a></li>
-						<li><a href="#">Спортсменки</a></li>
+						{% if cat_selected == 0 %}
+							<li class="selected">Все категории</li>
+						{% else %}
+							<li><a href="{% url 'home' %}">Все категории</a></li>
+						{% endif %}
+
+						{% for c in cats %}
+							{% if c.pk == cat_selected %}
+								<li class="selected">{{c.name}}</li>
+							{% else %}
+								<li><a href="{{ c.get_absolute_url }}">{{c.name}}</a></li>
+							{% endif %}
+						{% endfor %}
+
 						<li class="share">
 						<p>Наш инста</p>
 						<a class="share-yt" href="https://www.instagram.com/p/CoZdhhBNhbT/?utm_source=ig_web_copy_link" target="_blank" rel="nofollow"></a>
