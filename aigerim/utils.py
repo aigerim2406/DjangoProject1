@@ -4,14 +4,13 @@ from .models import *
 menu = [{'title': "О нас", 'url_name': 'about'},
         {'title': "Добавить", 'url_name': 'add_page'},
         {'title': "Обратная связь", 'url_name': 'contact'},
-        {'title': "Войти", 'url_name': 'login'}
 ]
 
 class DataMixin:
     paginate_by = 4
     def get_user_context(self, **kwargs):
         context = kwargs
-        cats = Category.objects.all()
+        cats = Category.objects.annotate(Count('aigerim'))
 
         user_menu = menu.copy()
         if not self.request.user.is_authenticated:
