@@ -4,6 +4,7 @@ from django.urls import reverse
 
 class Aigerim(models.Model):
     title = models.CharField(max_length=255, verbose_name="Заголовок")
+    slug = models.SlugField(max_length=255, unique=True, db_index=True, verbose_name="URL")
     content = models.TextField(blank=True, verbose_name="Текст поста")
     photo = models.ImageField(upload_to="photos/%Y/%m/%d/", verbose_name="ФОто")
     price = models.BigIntegerField(default=1000, verbose_name="Цена")
@@ -14,7 +15,7 @@ class Aigerim(models.Model):
         return self.title
 
     def get_absolute_url(self):
-        return reverse('post', kwargs={'post_id': self.pk})
+        return reverse('post', kwargs={'post_slug': self.slug})
 
     class Meta:
         verbose_name = 'Известные Пандоры'
@@ -23,6 +24,8 @@ class Aigerim(models.Model):
 
 class Category(models.Model):
     name = models.CharField(max_length=100, db_index=True, verbose_name = 'Категория')
+    slug = models.SlugField(max_length=255, unique=True, db_index=True, verbose_name="URL")
+
 
     def __str__(self):
         return self.name
