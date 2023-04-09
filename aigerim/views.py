@@ -1,50 +1,43 @@
 from django.http import HttpResponse, HttpResponseNotFound, Http404
 from django.shortcuts import render, redirect, get_object_or_404
 from django.urls import reverse_lazy
+from django.core.paginator import Paginator
 from django.views.generic import ListView, DetailView, CreateView
-
+from django.contrib.auth.mixins import LoginRequiredMixin
 
 from .forms import *
 from .models import *
+from .utils import *
 
-menu = [{'title': "О сайте", 'url_name': 'about'},
-        {'title': "Добавить", 'url_name': 'add_page'},
-        {'title': "Обратная связь", 'url_name': 'contact'},
-        {'title': "Войти", 'url_name': 'login'}
-]
-
-class AigerimHome(ListView):
+class AigerimHome(DataMixin, ListView):
     model = Aigerim
     template_name = 'aigerim/index.html'
     context_object_name = 'posts'
 
     def get_context_data(self, *, object_list=None, **kwargs):
         context = super().get_context_data(**kwargs)
-        context['menu'] = menu
-        context['title'] = 'Главная страница'
-        context['cat_selected'] = 0
-        return context
+        c_def = self.get_user_context(title='Главная страница')
+        return dict(list(context.items()) + list(c_def.items()))
 
     def get_queryset(self):
         return Aigerim.objects.filter(is_published=True)
 
-class AigerimCategory(ListView):
+class AigerimCategory(DataMixin, ListView):
     model = Aigerim
     template_name = 'aigerim/index.html'
     context_object_name = 'posts'
     allow_empty = False
 
     def get_queryset(self):
-        return Aigerim.objects.filter(cat__slug=self.kwargs['cat_slug'])
+        return Aigerim.objects.filter(cat__slug=self.kwargs['cat_slug'], is_published=True)
 
     def get_context_data(self, *, object_list=None, **kwargs):
         context = super().get_context_data(**kwargs)
-        context['title'] = 'Категория - ' + str(context['posts'][0].cat)
-        context['menu'] = menu
-        context['cat_selected'] = context['posts'][0].cat_id
-        return context
+        c_def = self.get_user_context(title='Категория - ' + str(context['posts'][0].cat),
+                                      cat_selected=context['posts'][0].cat_id)
+        return dict(list(context.items()) + list(c_def.items()))
 
-class ShowPost(DetailView):
+class ShowPost(DataMixin, DetailView):
     model = Aigerim
     template_name = 'aigerim/post.html'
     slug_url_kwarg = 'post_slug'
@@ -52,25 +45,29 @@ class ShowPost(DetailView):
 
     def get_context_data(self, *, object_list=None, **kwargs):
         context = super().get_context_data(**kwargs)
-        context['title'] = context['post']
-        context['menu'] = menu
-        return context
+        c_def = self.get_user_context(title=context['post'])
+        return dict(list(context.items()) + list(c_def.items()))
 
-class AddPage(CreateView):
+class AddPage(LoginRequiredMixin, DataMixin, CreateView):
     form_class = AddPostForm
     template_name = 'aigerim/addpage.html'
     success_url = reverse_lazy('home')
     login_url = reverse_lazy('home')
+    # login_url = '/admin/'
+    # raise_exception = True
 
     def get_context_data(self,*, object_list=None, **kwargs):
         context = super().get_context_data(**kwargs)
-        context['title'] = 'Добавить'
-        context['menu'] = menu
-        return context
+        c_def = self.get_user_context(title="Добавить")
+        return dict(list(context.items()) + list(c_def.items()))
 
 def about(request):
-    return render(request, 'aigerim/about.html', {'menu': menu, 'title': 'О сайте'})
+    contact_list = Aigerim.objects.all()
+    paginator = Paginator(contact_list, 4)
 
+    page_number = request.GET.get('page')
+    page_obj = paginator.get_page(page_number)
+    return render(request, 'aigerim/about.html', {'page_obj': page_obj, 'menu': menu, 'title': "our_about"})
 def contact(request):
     return HttpResponse("Обратная связь")
 
