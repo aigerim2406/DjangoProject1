@@ -1,11 +1,16 @@
 {% extends 'aigerim/base.html' %}
 
 {% block content %}
+<a href="#">Редактирование</a>
+
 <h1>{{post.title}}</h1>
 
 {% if post.photo %}
 <p><img class="img-article-left" src="{{post.photo.url}}"></p>
 {% endif %}
+<h4><span class="badge badge-light"> {{post.price}} ₸ </span></h4>
 
-{{post.content|linebreaks}}
+<h4>{{post.content|linebreaks}}</h4>
+
+<a href="#"><button type="submit" class="btn btn-success btn-lg">Купить</button></a>
 {% endblock %}

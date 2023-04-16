@@ -11,5 +11,6 @@ urlpatterns = [
     path('logout/', logout_user, name='logout'),
     path('register/', RegisterUser.as_view(), name='register'),
     path('post/<slug:post_slug>/', ShowPost.as_view(), name='post'),
-    path('category/<slug:cat_slug>/', AigerimCategory.as_view(), name='category')
+    path('category/<slug:cat_slug>/', AigerimCategory.as_view(), name='category'),
+    # path('update/<int:pk>', UpdatePage.as_view(), name='update')
 ]

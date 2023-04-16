@@ -1,20 +1,12 @@
 {% extends 'aigerim/base.html' %}
 
 {% block content %}
-<h1>{{title}}</h1>
 
-{% for contact in page_obj %}
-<p>{{contact}}</p>
-{% endfor %}
-
-<nav>
-    <ul>
-        {% for p in page_obj.paginator.page_range %}
-        <li>
-            <a href="?page={{p}}">{{p}}</a>
-        </li>
-        {% endfor %}
-    </ul>
-</nav>
+<p>Наша миссия:
+    Дарить радость женщинам, предлагая им возможности
+    для раскрытия своей индивидуальности с помощью
+    наших высококачественных и современных украшений
+    ручной доработки по приемлемым ценам.
+</p>
 
 {% endblock %}

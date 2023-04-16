@@ -11,6 +11,7 @@
 				<p><img class="img-article-left thumb" src="{{p.photo.url}}"></p>
 				{% endif %}
 				<h2>{{p.title}}</h2>
+				<p class="display-7"><span class="badge bg-secondary">{{p.price}} ₸ </span></p>
 		{% autoescape on %}
 			{{p.content|linebreaks|truncatewords:10}}
 		{% endautoescape %}
