@@ -1,17 +1,57 @@
-from django.http import HttpResponse, HttpResponseNotFound, Http404
+from django.http import HttpResponseNotFound, Http404
 from django.shortcuts import render, redirect, get_object_or_404
 from django.urls import reverse_lazy
 from django.contrib.auth import logout, login
 from django.core.paginator import Paginator
 from django.views.generic import ListView, DetailView, CreateView, FormView, UpdateView, DeleteView
 from django.contrib.auth.views import LoginView
-from django.contrib.auth.forms import AuthenticationForm
 from django.contrib.auth.mixins import LoginRequiredMixin
-from django.contrib.auth.decorators import login_required
+from django.forms import model_to_dict
+from rest_framework import generics
+from django.shortcuts import render
+from rest_framework.response import Response
+from rest_framework.views import APIView
 
 from .forms import *
-from .models import *
+from .models import Aigerim
+from .serializers import AigerimSerializer
 from .utils import *
+
+
+
+class AigerimAPIView(APIView):
+    def get(self, request):
+        a = Aigerim.objects.all()
+        return Response({'posts': AigerimSerializer(a, many=True).data})
+
+    def post(self, request):
+        serializer = AigerimSerializer(data=request.data)
+        serializer.is_valid(raise_exception=True)
+        serializer.save()
+
+        return Response({'post': serializer.data})
+
+    def put(self, request, *args, **kwargs):
+        pk = kwargs.get("pk", None)
+        if not pk:
+            return Response({"error": "Method PUT not allowed"})
+
+        try:
+            instance = Aigerim.objects.get(pk=pk)
+        except:
+            return Response({"error": "Object does not exists"})
+
+        serializer = AigerimSerializer(data=request.data, instance=instance)
+        serializer.is_valid(raise_exception=True)
+        serializer.save()
+        return Response({"post": serializer.data})
+
+    def delete(self, request, *args, **kwargs):
+        pk = kwargs.get("pk", None)
+        if not pk:
+            return Response({"error": "Method DELETE not allowed"})
+
+
 
 class AigerimHome(DataMixin, ListView):
     model = Aigerim
@@ -122,14 +162,19 @@ class ContactFormView(DataMixin, FormView):
         print(form.cleaned_data)
         return redirect('home')
 
+def pageNotFound(request, exception):
+    return HttpResponseNotFound('<h1>Страница не найдена</h1>')
+
+
+
+
+
+
 # def contact(request):
 #     return HttpResponse("Обратная связь")
 
 # def login(request):
 #     return HttpResponse("Авторизация")
-
-def pageNotFound(request, exception):
-    return HttpResponseNotFound('<h1>Страница не найдена</h1>')
 
 
 # def addpage(request):
