@@ -3,53 +3,63 @@ from django.shortcuts import render, redirect, get_object_or_404
 from django.urls import reverse_lazy
 from django.contrib.auth import logout, login
 from django.core.paginator import Paginator
-from django.views.generic import ListView, DetailView, CreateView, FormView, UpdateView, DeleteView
+from django.views.generic import ListView, DetailView, CreateView, FormView
 from django.contrib.auth.views import LoginView
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.forms import model_to_dict
-from rest_framework import generics
+from rest_framework import generics, mixins
 from django.shortcuts import render
+from rest_framework.decorators import action
+from rest_framework.permissions import IsAuthenticatedOrReadOnly, IsAdminUser
 from rest_framework.response import Response
 from rest_framework.views import APIView
+from rest_framework.viewsets import GenericViewSet
 
 from .forms import *
-from .models import Aigerim
+from .models import Aigerim, Category
+from .permissions import IsAdminOrReadOnly, IsOwnerOrReadOnly
 from .serializers import AigerimSerializer
+
 from .utils import *
 
 
+class AigerimAPIList(generics.ListCreateAPIView):
+    queryset = Aigerim.objects.all()
+    serializer_class = AigerimSerializer
+    permission_classes = (IsAuthenticatedOrReadOnly,)
 
-class AigerimAPIView(APIView):
-    def get(self, request):
-        a = Aigerim.objects.all()
-        return Response({'posts': AigerimSerializer(a, many=True).data})
+class AigerimAPIUpdate(generics.RetrieveUpdateAPIView):
+    queryset = Aigerim.objects.all()
+    serializer_class = AigerimSerializer
+    permission_classes = (IsOwnerOrReadOnly,)
 
-    def post(self, request):
-        serializer = AigerimSerializer(data=request.data)
-        serializer.is_valid(raise_exception=True)
-        serializer.save()
+class AigerimAPIDestroy(generics.RetrieveUpdateDestroyAPIView):
+    queryset = Aigerim.objects.all()
+    serializer_class = AigerimSerializer
+    permission_classes = (IsAdminOrReadOnly,)
 
-        return Response({'post': serializer.data})
 
-    def put(self, request, *args, **kwargs):
-        pk = kwargs.get("pk", None)
-        if not pk:
-            return Response({"error": "Method PUT not allowed"})
-
-        try:
-            instance = Aigerim.objects.get(pk=pk)
-        except:
-            return Response({"error": "Object does not exists"})
-
-        serializer = AigerimSerializer(data=request.data, instance=instance)
-        serializer.is_valid(raise_exception=True)
-        serializer.save()
-        return Response({"post": serializer.data})
-
-    def delete(self, request, *args, **kwargs):
-        pk = kwargs.get("pk", None)
-        if not pk:
-            return Response({"error": "Method DELETE not allowed"})
+#ViewSet and ModelViewSet and Router
+# class AigerimViewSet(mixins.CreateModelMixin,
+#                      mixins.RetrieveModelMixin,
+#                      mixins.UpdateModelMixin,
+#                      mixins.ListModelMixin,
+#                      GenericViewSet):
+#     # queryset = Aigerim.objects.all()
+#     serializer_class = AigerimSerializer
+#
+#     def get_queryset(self):
+#         pk = self.kwargs.get("pk")
+#
+#         if not pk:
+#             return Aigerim.objects.all()[:3]
+#
+#         return Aigerim.objects.filter(pk=pk)
+#
+#     @action(methods=['get'], detail=True)
+#     def category(self, request, pk=None):
+#         cats = Category.objects.get(pk=pk)
+#         return Response({'cats': cats.name})
 
 
 
@@ -162,11 +172,48 @@ class ContactFormView(DataMixin, FormView):
         print(form.cleaned_data)
         return redirect('home')
 
-def pageNotFound(request, exception):
-    return HttpResponseNotFound('<h1>Страница не найдена</h1>')
+def bad_request(request, exception=None):
+    return render(request,'tour/content/400.html')
+def permission_denied(request, exception=None):
+    return render(request,'tour/content/403.html', {})
+def page_not_found(request,exception):
+    return render(request, 'tour/content/404.html', {})
+def server_error(request,exception=None):
+    return render(request,'tour/content/500.html',{})
 
 
 
+# class AigerimAPIView(APIView):
+#     def get(self, request):
+#         a = Aigerim.objects.all()
+#         return Response({'posts': AigerimSerializer(a, many=True).data})
+#
+#     def post(self, request):
+#         serializer = AigerimSerializer(data=request.data)
+#         serializer.is_valid(raise_exception=True)
+#         serializer.save()
+#
+#         return Response({'post': serializer.data})
+#
+#     def put(self, request, *args, **kwargs):
+#         pk = kwargs.get("pk", None)
+#         if not pk:
+#             return Response({"error": "Method PUT not allowed"})
+#
+#         try:
+#             instance = Aigerim.objects.get(pk=pk)
+#         except:
+#             return Response({"error": "Object does not exists"})
+#
+#         serializer = AigerimSerializer(data=request.data, instance=instance)
+#         serializer.is_valid(raise_exception=True)
+#         serializer.save()
+#         return Response({"post": serializer.data})
+#
+#     def delete(self, request, *args, **kwargs):
+#         pk = kwargs.get("pk", None)
+#         if not pk:
+#             return Response({"error": "Method DELETE not allowed"})
 
 
 
@@ -230,3 +277,15 @@ def pageNotFound(request, exception):
 #         'cat_selected': 0,
 #     }
 #     return render(request, 'aigerim/index.html', context=context)
+
+# class AigerimAPIList(generics.ListCreateAPIView):
+#     queryset = Aigerim.objects.all()
+#     serializer_class = AigerimSerializer
+#
+# class AigerimAPIUpdate(generics.UpdateAPIView):
+#     queryset = Aigerim.objects.all()
+#     serializer_class = AigerimSerializer
+#
+# class AigerimAPIDetailView(generics.RetrieveUpdateDestroyAPIView):
+#     queryset = Aigerim.objects.all()
+#     serializer_class = AigerimSerializer

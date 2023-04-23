@@ -2,32 +2,19 @@ from django.conf.urls.static import static
 from django.contrib import admin
 from django.urls import path, include
 from aigerim.views import *
-from rest_framework import serializers, routers, viewsets
+
 from ProjectDjango import settings
-from aigerim.views import AigerimAPIView
 
-class UserSerializer(serializers.HyperlinkedModelSerializer):
-    class Meta:
-        model = User
-        fields = ['url', 'username', 'email', 'is_staff']
 
-# ViewSets define the view behavior.
-class UserViewSet(viewsets.ModelViewSet):
-    queryset = User.objects.all()
-    serializer_class = UserSerializer
-
-# Routers provide an easy way of automatically determining the URL conf.
-router = routers.DefaultRouter()
-router.register(r'users', UserViewSet)
 
 
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('captcha/', include('captcha.urls')),
     path('', include('aigerim.urls')),
-    path('api/v1/aigerimlist/', AigerimAPIView.as_view()),
-    path('api/v1/aigerimlist/<int:pk>/', AigerimAPIView.as_view())
-    # path('api-auth/',include('rest_framework.urls',namespace='rest_framework'))
+    path('api/v1/aigerim/', AigerimAPIList.as_view()),
+    path('api/v1/aigerim/<int:pk>/', AigerimAPIUpdate.as_view()),
+    path('api/v1/aigerimdelete/<int:pk>/', AigerimAPIDestroy.as_view()),
 ]
 
 if settings.DEBUG:
@@ -37,4 +24,32 @@ if settings.DEBUG:
     ] + urlpatterns
     urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
 
-handler404 = pageNotFound
+# handler404 = pageNotFound
+
+# Routers provide an easy way of automatically determining the URL conf.
+# router = routers.DefaultRouter()
+# router.register(r'aigerim', AigerimViewSet)
+# print(router.urls)
+
+# path('api/v1/aigerimlist/', AigerimAPIList.as_view()),
+# path('api/v1/aigerimlist/<int:pk>/', AigerimAPIUpdate.as_view()),
+# path('api/v1/aigerimdetail/<int:pk>/', AigerimAPIDetailView.as_view()),
+
+# class MyCustomRouter(routers.DefaultRouter):
+#     routes = [
+#         routers.Route(url=r'^{prefix}$',
+#                       mapping={'get': 'list'},
+#                       name='{basename}-list',
+#                       detail=False,
+#                       initkwargs={'suffix': 'list'}),
+#         routers.Route(url=r'{prefix}/{lookup}',
+#                       mapping={'get': 'retrieve'},
+#                       name='{basename}-detail',
+#                       detail=True,
+#                       initkwargs={'suffix': 'Detail'})
+#     ]
+#
+# router = MyCustomRouter()
+# router.register(r'aigerim', AigerimViewSet, basename='aigerim')
+# print(router.urls)
+# path('api/v1/', include(router.urls)), url turi

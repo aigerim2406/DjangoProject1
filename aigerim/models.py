@@ -1,5 +1,7 @@
 from django.db import models
 from django.urls import reverse
+from django.contrib.auth.models import User
+
 
 
 class Aigerim(models.Model):
@@ -10,6 +12,7 @@ class Aigerim(models.Model):
     price = models.BigIntegerField(default=1000, verbose_name="Цена")
     is_published = models.BooleanField(default=True, verbose_name="Публикация")
     cat = models.ForeignKey('Category', on_delete=models.PROTECT, null=True, verbose_name="Категория")
+    user = models.ForeignKey(User, verbose_name="Пользователь", on_delete=models.CASCADE)
 
     def __str__(self):
         return self.title
