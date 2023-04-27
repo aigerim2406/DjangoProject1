@@ -9,7 +9,9 @@ from django.contrib.auth.mixins import LoginRequiredMixin
 from django.forms import model_to_dict
 from rest_framework import generics, mixins
 from django.shortcuts import render
+# from rest_framework.authentication import TokenAuthentication
 from rest_framework.decorators import action
+from rest_framework.pagination import PageNumberPagination
 from rest_framework.permissions import IsAuthenticatedOrReadOnly, IsAdminUser
 from rest_framework.response import Response
 from rest_framework.views import APIView
@@ -23,15 +25,22 @@ from .serializers import AigerimSerializer
 from .utils import *
 
 
+class AigerimAPIListPagination(PageNumberPagination):
+    page_size = 3
+    page_size_query_param = 'page_size'
+    max_page_size = 10000
+
 class AigerimAPIList(generics.ListCreateAPIView):
     queryset = Aigerim.objects.all()
     serializer_class = AigerimSerializer
     permission_classes = (IsAuthenticatedOrReadOnly,)
+    pagination_class = AigerimAPIListPagination
 
 class AigerimAPIUpdate(generics.RetrieveUpdateAPIView):
     queryset = Aigerim.objects.all()
     serializer_class = AigerimSerializer
     permission_classes = (IsOwnerOrReadOnly,)
+    # authentication_classes = (TokenAuthentication)
 
 class AigerimAPIDestroy(generics.RetrieveUpdateDestroyAPIView):
     queryset = Aigerim.objects.all()
@@ -173,13 +182,13 @@ class ContactFormView(DataMixin, FormView):
         return redirect('home')
 
 def bad_request(request, exception=None):
-    return render(request,'tour/content/400.html')
+    return render(request, 'content/400.html')
 def permission_denied(request, exception=None):
-    return render(request,'tour/content/403.html', {})
-def page_not_found(request,exception):
-    return render(request, 'tour/content/404.html', {})
+    return render(request, 'content/403.html', {})
+def page_not_found(request, exception=None):
+    return render(request, 'content/404.html', {})
 def server_error(request,exception=None):
-    return render(request,'tour/content/500.html',{})
+    return render(request, 'content/500.html', {})
 
 
 
