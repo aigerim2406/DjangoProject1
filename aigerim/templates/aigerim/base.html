@@ -11,56 +11,71 @@
 	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css">
 	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.3/jquery.min.js"></script>
 	<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <link rel="apple-touch-icon" href="assets/img/apple-icon.png">
+    <link rel="shortcut icon" type="image/x-icon" href="assets/img/favicon.ico">
+
+    <link rel="stylesheet" href="{% static 'aigerim/css/bootstrap.min.css' %}">
+    <link rel="stylesheet" href="{% static 'aigerim/css/templatemo.css' %}">
+    <link rel="stylesheet" href="{% static 'aigerim/css/custom.css' %}">
+
 </head>
 <body>
-<table class="table-page" border="0" cellpadding="0" cellspacing="0">
-	<tr><td valign="top">
-		{% block mainmenu %}
-			<div class="header">
-					<ul id="mainmenu" class="mainmenu">
-						<li ><a href="{% url 'home' %}">Главная</a></li>
+        <!-- Header -->
+    <nav class="navbar navbar-expand-lg navbar-light shadow">
+        <div class="container d-flex justify-content-between align-items-center">
+
+            <a class="navbar-brand text-success logo h1 align-self-center" href="aigerim.index.html" style="padding-bottom: 50px;margin-right:100px"   >
+                Moon
+            </a>
+
+            <button class="navbar-toggler border-0" type="button" data-bs-toggle="collapse" data-bs-target="#templatemo_main_nav" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+
+            <div class="align-self-center collapse navbar-collapse flex-fill  d-lg-flex justify-content-lg-between" id="templatemo_main_nav">
+                <div class="flex-fill">
+                    <ul class="nav navbar-nav d-flex justify-content-between mx-lg-auto">
+                        <li class="nav-item"><a href="{% url 'home' %}">Главная</a></li>
 						{% for a in menu %}
-							<li><a href="{% url a.url_name %}">{{a.title}}</a></li>
+							<li class="nav-item"><a href="{% url a.url_name %}">{{a.title}}</a></li>
 						{% endfor %}
-						{% if request.user.is_authenticated %}
-						<li class="last">{{user.username}} | <a href="{% url 'logout' %}">Выйти</a></li>
+                    </ul>
+                </div>
+                        {% if request.user.is_authenticated %}
+                            <a class="btn btn-link">{{user.username}}</a> | <a href="{% url 'logout' %}">Выйти</a>
 						{% else %}
-						<li class="last"><a href="{% url 'register' %}">Регистрация</a> | <a href="{% url 'login' %}">Войти</a></li>
+						    <li class="nav-item right"><a href="{% url 'register' %}">Регистрация</a> | <a href="{% url 'login' %}">Войти</a></li>
 						{% endif %}
+            </div>
 
-						<i class="fa fa-instagram" style="font-size:36px;">
-							<a class="share-yt" href="https://www.instagram.com/p/CoZdhhBNhbT/?utm_source=ig_web_copy_link"
-																				   target="_blank" rel="nofollow">
-							</a>
-						</i>
+        </div>
+    </nav>
+    <!-- Close Header -->
 
-					</ul>
-				<div class="clear"></div>
-			</div>
-		{% endblock mainmenu %}
+    <!-- Modal -->
+    <div class="modal fade bg-white" id="templatemo_search" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-lg" role="document">
+            <div class="w-100 pt-1 mb-5 text-right">
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <form action="" method="get" class="modal-content modal-body border-0 p-0">
+                <div class="input-group mb-2">
+                    <input type="text" class="form-control" id="inputModalSearch" name="q" placeholder="Search ...">
+                    <button type="submit" class="input-group-text bg-success text-light">
+                        <i class="fa fa-fw fa-search text-white"></i>
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
 
-			<table class="table-content" border=0 cellpadding="0" cellspacing="0">
-				<tr>
-					<td valign="top" class="left-chapters">
-					<ul id="leftchapters">
-						{% if cat_selected == 0 %}
-							<li class="selected">Все категории</li>
-						{% else %}
-							<li><a href="{% url 'home' %}">Все категории</a></li>
-						{% endif %}
 
-						{% for c in cats %}
-							{% if c.pk == cat_selected %}
-								<li class="selected">{{c.name}}</li>
-							{% else %}
-								<li><a href="{{ c.get_absolute_url }}">{{c.name}}</a></li>
-							{% endif %}
-						{% endfor %}
 
-					</ul>
-					</td>
-
-					<td valign="top" class="content">
+    <!-- Start Banner Hero -->
+    <td valign="top" class="content">
 						<div id="myCarousel" class="carousel slide" data-ride="carousel">
 						  <ol class="carousel-indicators">
 							<li data-target="#myCarousel" data-slide-to="0" class="active"></li>
@@ -70,7 +85,7 @@
 
 						  <div class="carousel-inner">
 							<div class="item active">
-							  <img src="https://pandora.kz/upload/iblock/48b/yed5sr6575a99qx9rsp4jh1bthhl8j87.jpg" alt="#">
+							  <img src="https://pandora.kz/upload/iblock/48b/yed5sr6575a99qx9rsp4jh1bthhl8j87.jpg"  alt="#">
 							</div>
 
 							<div class="item">
@@ -91,14 +106,49 @@
 							<span class="sr-only">Next</span>
 						  </a>
 						</div>
-						{% block breadcrumbs %}
-						{% endblock %}
+    <!-- End Banner Hero -->
 
-						<div class="content-text">
-							{% block content %}
-							{% endblock %}
+
+    <!-- Start Categories of The Month -->
+    <section class="container py-5">
+        <div class="row text-center pt-3">
+            <div class="col-lg-6 m-auto">
+                <h1 class="h1">Категории По Желанию</h1>
+                <p>
+                    Выбирая MOON, вы дарите не просто ювелирные украшения.
+                    Вы дарите эмоции, непередаваемую нежность и уникальные истории.
+                </p>
+            </div>
+        </div>
+
+		<div class="row row-cols-1 row-cols-md-4 g-4 " style="margin-top: 20px; margin-bottom: 10px">
+			{% for c in cats %}
+              <div class="col">
+                  <a href="{{ c.get_absolute_url }}" style="color:black">
+                <div class="card">
+                  <div class="card-body ">
+                    <p class="card-text">{{c.name}}</p>
+                  </div>
+                </div>
+                  </a>
+              </div>
+			{% endfor %}
+        </div>
+    </section>
+    <!-- End Categories of The Month -->
+
+
+    <!-- Start Featured Product -->
+    <section class="bg-light">
+        <div class="container py-5">
+            <div class="row">
+                {% block content %}
+                {% endblock%}
+            </div>
+        </div>
+		<div class="content-text center" style="margin-left: 650px;">
 							{% if page_obj.has_other_pages %}
-							<nav aria-label="Page navigation example">
+							<nav aria-label="Page navigation example" style="padding-bottom: 10px">
 								<ul class="pagination">
 									{% if page_obj.has_previous %}
 										<li class="page-item">
@@ -126,20 +176,104 @@
 							</nav>
 							{% endif %}
 						</div>
-					</td>
-				</tr>
-			</table>
-	</td></tr>
-			<!-- Footer -->
-			<tr>
+    </section>
+    <!-- End Featured Product -->
+
+
+
+    <!-- Start Script -->
+    <script src="{% static 'js/jquery-1.11.0.min.js' %}"></script>
+    <script src="{% static 'js/jquery-migrate-1.2.1.min.js' %}"></script>
+    <script src="{% static 'js/bootstrap.bundle.min.js' %}"></script>
+    <script src="{% static 'js/templatemo.js' %}"></script>
+    <script src="{% static 'js/custom.js' %}"></script>
+    <!-- End Script -->
+
+
+				<!-- Footer -->
+				<tr>
 				<td valign=top>
-				<div id="footer">
-					<p>&copy; 2023 year NARXOZ UNIVERSITY</p>
-				</div>
+				<footer class="bg-dark" id="tempaltemo_footer">
+                <div class="container">
+                    <div class="row">
 
-		</td>
-	</tr>
-</table>
+                        <div class="col-md-4 pt-5">
+                            <h2 class="h2 text-success border-bottom pb-3 border-light logo">Moon</h2>
+                            <ul class="list-unstyled text-light footer-link-list">
+                                <li>
+                                    <i class="fas fa-map-marker-alt fa-fw"></i>
 
+                                </li>
+                                <li>
+                                    <i class="fa fa-phone fa-fw"></i>
+                                    <a class="text-decoration-none" href="tel:8776">8747-777-77-77</a>
+                                </li>
+                                <li>
+                                    <i class="fa fa-envelope fa-fw"></i>
+                                    <a class="text-decoration-none" href="mailto:gubaidullinaaigerim695@gmail.com">gubaidullinaaigerim695@gmail.com</a>
+                                </li>
+                            </ul>
+                        </div>
+
+
+                        <div class="col-md-4 pt-5">
+                            <h2 class="h2 text-light border-bottom pb-3 border-light">Information</h2>
+                            <ul class="list-unstyled text-light footer-link-list">
+                                <li><a class="text-decoration-none" href="http://127.0.0.1:8000/">Home</a></li>
+                                <li><a class="text-decoration-none" href="http://127.0.0.1:8000/about/">About Us</a></li>
+                                <li><a class="text-decoration-none" href="https://2gis.kz/almaty/geo/70000001022543060">Shop Locations</a></li>
+                                <li><a class="text-decoration-none" href="#">FAQs</a></li>
+                                <li><a class="text-decoration-none" href="http://127.0.0.1:8000/contact/">Contact</a></li>
+                            </ul>
+                        </div>
+
+                    </div>
+
+                    <div class="row text-light mb-4">
+                        <div class="col-12 mb-3">
+                            <div class="w-100 my-3 border-top border-light"></div>
+                        </div>
+                        <div class="col-auto me-auto">
+                            <ul class="list-inline text-left footer-icons">
+                                <li class="list-inline-item border border-light rounded-circle text-center">
+                                    <a class="text-light text-decoration-none" target="_blank" href="http://facebook.com/"><i class="fab fa-facebook-f fa-lg fa-fw"></i></a>
+                                </li>
+                                <li class="list-inline-item border border-light rounded-circle text-center">
+                                    <a class="text-light text-decoration-none" target="_blank" href="https://www.instagram.com/"><i class="fab fa-instagram fa-lg fa-fw"></i></a>
+                                </li>
+                                <li class="list-inline-item border border-light rounded-circle text-center">
+                                    <a class="text-light text-decoration-none" target="_blank" href="https://twitter.com/"><i class="fab fa-twitter fa-lg fa-fw"></i></a>
+                                </li>
+                                <li class="list-inline-item border border-light rounded-circle text-center">
+                                    <a class="text-light text-decoration-none" target="_blank" href="https://www.linkedin.com/"><i class="fab fa-linkedin fa-lg fa-fw"></i></a>
+                                </li>
+                            </ul>
+                        </div>
+                        <div class="col-auto">
+                            <label class="sr-only" for="subscribeEmail">Email address</label>
+                            <div class="input-group mb-2">
+                                <input type="text" class="form-control bg-dark border-light" id="subscribeEmail" placeholder="Email address">
+                                <div class="input-group-text btn-success text-light">Subscribe</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="w-100 bg-black py-3">
+                    <div class="container">
+                        <div class="row pt-2">
+                            <div class="col-12">
+                                <p class="text-left text-light">
+                                    Copyright &copy; 2023 Narxoz University
+                                    | Designed by <a rel="sponsored" href="#" target="_blank">Moon-Ai</a>
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+				</footer>
+		    </td>
+		</tr>
 </body>
 </html>
+

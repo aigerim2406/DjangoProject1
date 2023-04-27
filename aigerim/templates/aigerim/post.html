@@ -1,16 +1,25 @@
 {% extends 'aigerim/base.html' %}
 
 {% block content %}
-<a href="#">Редактирование</a>
+<!--<a href="http://127.0.0.1:8000/api/v1/aigerim/">Редактирование</a>-->
 
-<h1>{{post.title}}</h1>
 
-{% if post.photo %}
-<p><img class="img-article-left" src="{{post.photo.url}}"></p>
-{% endif %}
-<h4><span class="badge badge-light"> {{post.price}} ₸ </span></h4>
+<div class="container d-flex g-5">
+    <div class="container">
+        {% if post.photo %}
+        <p><img class="card-img-top" src="{{post.photo.url}}" style="width: 300px; height: 400px"></p>
+        {% endif %}
+    </div>
+                        <div class="container">
+                            <h1 class="display-5">{{post.title}}</h1>
+                            <h4 class="fw-bold" ><span class="badge badge-light"> {{post.price}} ₸ </span></h4>
 
-<h4>{{post.content|linebreaks}}</h4>
+                            <h4>{{post.content|linebreaks}}</h4>
 
-<a href="#"><button type="submit" class="btn btn-success btn-lg">Купить</button></a>
+                            <a href="http://127.0.0.1:8000/"><button type="submit" class="btn btn-success btn-lg">Купить</button></a>
+
+                        </div>
+</div>
+
+
 {% endblock %}

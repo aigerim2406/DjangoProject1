@@ -1,25 +1,40 @@
 {% extends 'aigerim/base.html' %}
 
 {% block content %}
+<div class="row text-center py-3">
+                <div class="col-lg-6 m-auto">
+                    <h1 class="h1">Рекомендуемый Продукт</h1>
+                    <p>
+                        Изготовленные с любовью к каждой детали и заботливо завершенные вручную.
+                        Украшения MOON — ваши особенные истории, воплощенные в ювелирных  изделиях.
+                    </p>
+                </div>
+            </div>
+            {% for p in posts %}
+                <div class="col-12 col-md-4 mb-4">
 
-<ul class="list-articles">
-	{% for p in posts %}
-			<li><div class="article-panel">
-				<p class="first">Категория: {{p.cat}}</p>
-			</div>
-				{% if p.photo %}
-				<p><img class="img-article-left thumb" src="{{p.photo.url}}"></p>
-				{% endif %}
-				<h2>{{p.title}}</h2>
-				<p class="display-7"><span class="badge bg-secondary">{{p.price}} ₸ </span></p>
-		{% autoescape on %}
-			{{p.content|linebreaks|truncatewords:10}}
-		{% endautoescape %}
-			<div class="clear"></div>
-			<p class="link-read-post"><a href="{{ p.get_absolute_url }}">Подробнее...</a></p>
-			</li>
-	{% endfor %}
-</ul>
+                    <div class="card h-100">
+                        <a href="{{ p.get_absolute_url }}">
+                            <img src="{{p.photo.url}}" class="card-img-top" alt="...">
+                        </a>
+                        <div class="card-body">
+                            <ul class="list-unstyled d-flex justify-content-between">
+                                <li>
+                                    Категория: {{p.cat}}
+                                </li>
+                                <li class="text-muted text-right"><span class="badge badge-light">Цена: {{p.price}} ₸</span></li>
+                            </ul>
+                            <a href="shop-single.html" class="h2 text-decoration-none text-dark">{{p.title}}</a>
+                            <p class="card-text">
+                                {% autoescape on %}
+			                        {{p.content|linebreaks|truncatewords:10}}
+		                        {% endautoescape %}
+                            </p>
+                            <p class="text-muted">Подробнее...</p>
+                        </div>
+                    </div>
+                </div>
+{%endfor%}
 
 {% endblock %}
 

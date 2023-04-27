@@ -1,19 +1,59 @@
 {% extends 'aigerim/base.html' %}
 
 {% block content %}
-<h1>{{title}}</h1>
+<head>
+    <title>Zay Shop - Contact</title>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
 
-<form method="post">
-    {% csrf_token %}
+    <link rel="apple-touch-icon" href="assets/img/apple-icon.png">
+    <link rel="shortcut icon" type="image/x-icon" href="assets/img/favicon.ico">
 
-    <div class="form-error">{{ form.non_field_errors }}</div>
+    <link rel="stylesheet" href="assets/css/bootstrap.min.css">
+    <link rel="stylesheet" href="assets/css/templatemo.css">
+    <link rel="stylesheet" href="assets/css/custom.css">
 
-{% for f in form %}
-<p><label class="form-label" for="{{ f.id_for_label }}">{{f.label}}: </label>{{ f }}</p>
-<div class="form-error">{{ f.errors }}</div>
-{% endfor %}
+    <!-- Load fonts style after rendering the layout styles -->
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Roboto:wght@100;200;300;400;500;700;900&display=swap">
+    <link rel="stylesheet" href="assets/css/fontawesome.min.css">
 
-    <button type="submit">Отправить</button>
-</form>
+    <!-- Load map styles -->
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.7.1/dist/leaflet.css" integrity="sha512-xodZBNTC5n17Xt2atTPuE1HxjVMSvLVW9ocqUKLsCC5CXdbqCmblAshOMAS6/keqq/sMZMZ19scR4PsZChSR7A==" crossorigin="" />
+<!--
+
+TemplateMo 559 Zay Shop
+
+https://templatemo.com/tm-559-zay-shop
+
+-->
+</head>
+
+    <div class="container-fluid bg-light py-5">
+        <div class="col-md-12 m-auto text-center">
+            <h1 class="h1">Contact Us</h1>
+            <p>
+                Выходят, виноваты, кто свои обязанности бросают, душа размягчается, то есть трудится.
+                Клиент очень счастлив.
+            </p>
+        </div>
+    </div>
+
+    <div class="container py-5">
+        <div class="row py-5">
+            <form method="post" class="col-md-9 m-auto" role="form">
+                {% csrf_token %}
+
+                <div class="form-error">{{ form.non_field_errors }}</div>
+
+                    {% for f in form %}
+                    <div class="mb-3"><label class="form-label" for="{{ f.id_for_label }}">{{f.label}}: </label>{{ f }}</div>
+                    <div class="form-error">{{ f.errors }}</div>
+                    {% endfor %}
+
+                <button type="submit" class="btn btn-success btn-lg px-3"><a href="http://127.0.0.1:8000/admin/">Отправить</a></button>
+            </form>
+        </div>
+    </div>
+
 
 {% endblock %}
